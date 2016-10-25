@@ -4,14 +4,14 @@
 	|                      'Hungry_Birds_Squad'                       /
 	|                    "expect what unexpected"                     /
 	|                                                                 /
-	|             we are : [t]0x1c || madfizh || atrph0s ||           /
+	|        we are : [t]0x1c || madfizh || atrph0s ||                /
 	|                                                                 /
 	|_________________________________________________________________/
 	******************************************************************/
 
 	//
 	//	External Links & Reference : https://github.com/NTICompass/PHP-Base32
-	//				                       https://stackoverflow.com
+	//								          		 https://stackoverflow.com
 	//
 
 	error_reporting(0);
@@ -177,8 +177,16 @@
 			for($i=0; $i<strlen($text); $i++) {
 				$act .= str_pad(decbin(ord($text[$i])), 8, ' ', STR_PAD_LEFT);
 			}
+			if(strpos($act, '  ')) {
+				$act = str_replace('  ', ' ', substr($act, 1));
+			} else {
+				if(strlen($act) < 8) {
+					$act = str_replace(' ', '', $act);
+				} else {
+					$act = substr($act, 1);
+				}
+			}
 		}
-		$act = substr($act, 1);
 		return $act;
 	}
 	function md5_enc($type,$text) {
