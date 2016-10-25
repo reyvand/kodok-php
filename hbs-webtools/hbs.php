@@ -4,14 +4,14 @@
 	|                      'Hungry_Birds_Squad'                       /
 	|                    "expect what unexpected"                     /
 	|                                                                 /
-	|        we are : [t]0x1c || madfizh || atrph0s ||                /
+	|             we are : [t]0x1c || madfizh || atrph0s ||           /
 	|                                                                 /
 	|_________________________________________________________________/
 	******************************************************************/
 
 	//
 	//	External Links & Reference : https://github.com/NTICompass/PHP-Base32
-	//								               https://stackoverflow.com
+	//				                       https://stackoverflow.com
 	//
 
 	error_reporting(0);
