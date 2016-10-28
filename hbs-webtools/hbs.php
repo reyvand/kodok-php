@@ -11,7 +11,7 @@
 
 	//
 	//	External Links & Reference : https://github.com/NTICompass/PHP-Base32
-	//								          		 https://stackoverflow.com
+	//                               https://stackoverflow.com
 	//
 
 	error_reporting(0);
@@ -146,6 +146,25 @@
 		$act = str_rot13($text);
 		return $act;
 	}
+	function rotate($type=NULL,$text,$count) {
+		$alphabets = array('a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');
+		if(empty($count)) {
+			$act = '"n" is required';
+		} else {
+			$act = '';
+			for($i=0; $i<strlen($text); $i++) {
+				if(array_search($text[$i], $alphabets)) {
+					$y = array_search($text[$i], $alphabets) + $count;
+					($y > 25 && array_search($text[$i], $alphabets) < 26) ? $y -= 26 : (($y > 51 && array_search($text[$i], $alphabets) > 25) ? $y -= 26 : $y = $y);
+					$x = $alphabets[$y];
+				} else {
+					$x = $text[$i];
+				}
+				$act .= $x;
+			}
+		}
+		return $act;
+	}
 	function hex($type,$text) {
 		$act = ($type == 'enc') ? bin2hex($text) : (($type == 'dec') ? hex2bin($text) : die('invalid input'));
 		return $act;
@@ -186,6 +205,12 @@
 					$act = substr($act, 1);
 				}
 			}
+		} elseif($type == 'dec') {
+			$x = explode(' ', $text);
+			$act = '';
+			for($i=0; $i<=substr_count($text, ' '); $i++) {
+				$act .= chr(bindec($x[$i]));
+			}
 		}
 		return $act;
 	}
@@ -198,9 +223,16 @@
 		return $act;
 	}
 	function overflow($type=NULL,$text,$count) {
-		for ($i=1; $i<=$count ; $i++) { 
-			echo $text;
+		if(empty($count)) {
+			echo '"n" is required';
+		} else {
+			for ($i=1; $i<=$count ; $i++) { 
+				echo $text;
+			}
 		}
+	}
+	function str_cnt($type=NULL,$text) {
+		return strlen($text);
 	}
 	function reverse($type=NULL,$text) {
 		$act = strrev($text);
@@ -215,7 +247,11 @@
 		return preg_replace("/[^A-Fa-f0-9 ]/", '', $text);
 	}
 	function split_char($type,$text,$count) {
-		$act = ($type == 'enc') ? chunk_split($text,$count,' ') : (($type == 'dec') ? str_replace(' ', '', $text) : die('invalid input'));
+		if(empty($count)) {
+			$act = 'invalid';
+		} else {
+			$act = ($type == 'enc') ? chunk_split($text,$count,' ') : (($type == 'dec') ? str_replace(' ', '', $text) : die('invalid input'));
+		}
 		return $act;
 	}
 ?>
@@ -336,21 +372,24 @@
 					<option value="ascii">ascii code</option>
 					<option>----------</option>
 					<option value="r13">rot13</option>
+					<option value="rotate">rot(n)</option>
+					<option value="rotate_brute">rot(brute 1-25)</option>
 					<option>----------</option>
 					<option value="md5_enc">MD5 (enc)</option>
 					<option value="sha1_enc">SHA1 (enc)</option>
 					<option>----------</option>
 					<option value="overflow">overflow</option>
+					<option value="str_cnt">count str</option>
 					<option value="reverse">reverse it</option>
 					<option value="hexchar">hex char</option>
 					<option value="split_char">split char</option>
 				</select>
-				<input type="number" name="x">
+				<input type="number" name="x" placeholder="n">
 				<button type="submit" name="dec" class="decrypt">decrypt</button></center>
 			</form>
 			</div>
 			<div class="output">
-				<center><textarea name="txtOutput" rows="3" cols="60" readonly><?= isset($_POST['enc']) ? $_POST['opt']('enc',$_POST['txtInput'],$_POST['x']) :  (isset($_POST['dec']) ? $_POST['opt']('dec',$_POST['txtInput']) : false) ?></textarea></center>
+				<center><textarea name="txtOutput" rows="3" cols="60" readonly><?= isset($_POST['enc']) ? $_POST['opt']('enc',$_POST['txtInput'],$_POST['x']) :  (isset($_POST['dec']) ? $_POST['opt']('dec',$_POST['txtInput'],NULL) : false) ?></textarea></center>
 			</div>
 		</div>
 	</div>
